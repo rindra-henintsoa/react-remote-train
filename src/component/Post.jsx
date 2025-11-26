@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import parse from 'html-react-parser';
 import useFetch from "../hooks/useFetch";
+import ModalPost from "./ModalPost";
 
-const Post = () => {
-    
-    const { loading, posts, errors } = useFetch(`${process.env.REACT_APP_API_ROOT}/posts?_embed`);
+const Post = ({ postlength }) => {
+    const { loading, posts, errors, length } = useFetch(`${process.env.REACT_APP_API_ROOT}/wp/v2/posts?_embed`);
+    const [open, setOpen] = useState(false);
 
     return (
         <>
@@ -12,6 +13,7 @@ const Post = () => {
                 <h3 className="text-2xl font-bold text-gray-900 sm:text-3xl dark:text-white">
                     Wordpress Post API retriever
                 </h3>
+                <button onClick={()=> setOpen(true)} className="bg-slate-500 text-white">voir le nombre d'article</button>
             </div>
             { loading && <div className="text-center">Chargement...</div>}
             { errors && 
@@ -55,6 +57,18 @@ const Post = () => {
                         }
                     </div>
                 </div>
+            }
+
+            {
+                open && <ModalPost>
+                            <h2>Mon Modal</h2>
+                            <div>
+                                Il y a {length} articles sur le site
+                            </div>
+                            <button onClick={() => setOpen(false)}>
+                                Fermer
+                            </button>
+                        </ModalPost>
             }
         </>
     )
